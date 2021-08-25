@@ -157,7 +157,7 @@
               <img
                 @click="deleteInvoiceItem(item.id)"
                 src="@/assets/icon-delete.svg"
-                alt=""
+                alt="delete-icon"
               />
             </tr>
           </table>
@@ -203,6 +203,8 @@
 </template>
 
 <script>
+import { uid } from "uid";
+import { mapMutations } from "vuex";
 export default {
   name: "invoiceModal",
   data() {
@@ -232,23 +234,66 @@ export default {
       invoiceTotal: 0,
     };
   },
+  created() {
+    //   get current date for invoice date field
+    this.invoiceDateUnix = Date.now();
+
+    this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString(
+      "en-us",
+      this.dateOptions
+    );
+  },
+  methods: {
+    ...mapMutations(["TOGGLE_INVOICE"]),
+    closeInvoice() {
+      this.TOGGLE_INVOICE();
+    },
+    addNewInvoiceItem() {
+      this.invoiceItemList.push({
+        id: uid(),
+        itemName: "",
+        qty: "",
+        price: 0,
+        total: 0,
+      });
+    },
+    deleteInvoiceItem(id) {
+      this.invoiceItemList = this.invoiceItemList.filter(
+        (item) => item.id !== id
+      );
+    },
+  },
+  watch: {
+    paymentTerms() {
+      const futureDate = new Date();
+      this.paymentDueDateUnix = futureDate.setDate(
+        futureDate.getDate() + parseInt(this.paymentTerms)
+      );
+
+      this.paymentDueDate = new Date(
+        this.paymentDueDateUnix
+      ).toLocaleDateString("en-us", this.dateOptions);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .invoice-wrap {
   position: fixed;
-  top: 0;
+  top: 5%;
   left: 0;
   width: 100%;
   height: 100vh;
   overflow: scroll;
+  z-index: 1;
 
   &::-webkit-scrollbar {
     display: none;
   }
 
   @media (min-width: 900px) {
+    top: 0;
     left: 90px;
   }
 
@@ -346,6 +391,7 @@ export default {
               right: 0;
               width: 12px;
               height: 16px;
+              cursor: pointer;
             }
           }
         }
@@ -365,11 +411,31 @@ export default {
 
     .save {
       margin-top: 60px;
+      //   align-items: center;
+
       div {
         flex: 1;
       }
       .right {
         justify-content: flex-end;
+      }
+
+      @media (max-width: 500px) {
+        flex-direction: column;
+        margin-top: 45px;
+        // align-items: flex-start;
+
+        div {
+          margin-bottom: 20px;
+        }
+        .right {
+          justify-content: space-between;
+          order: 1;
+        }
+
+        .left {
+          order: 2;
+        }
       }
     }
   }
