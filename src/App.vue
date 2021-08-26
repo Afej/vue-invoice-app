@@ -2,11 +2,15 @@
   <div>
     <div class="app flex flex-column" v-if="!smallMobile">
       <Navigation />
-      <div class="app-content flex flex-column">
+      <div class="app-content flex flex-column" v-if="invoicesLoaded">
+        <Modal v-if="modalActive" />
         <transition name="invoice">
           <InvoiceModal v-if="invoiceModal" />
         </transition>
         <router-view />
+      </div>
+      <div v-else>
+        <Loading />
       </div>
     </div>
     <div v-else class="mobile-message flex flex-column">
@@ -19,12 +23,16 @@
 <script>
 import Navigation from "@/components/Navigation";
 import InvoiceModal from "@/components/InvoiceModal";
-import { mapState } from "vuex";
+import Loading from "@/components/Loading";
+import Modal from "@/components/Modal";
+import { mapState, mapActions } from "vuex";
 
 export default {
   components: {
     Navigation,
     InvoiceModal,
+    Modal,
+    Loading,
   },
   data() {
     return {
@@ -32,13 +40,15 @@ export default {
     };
   },
   created() {
+    this.GET_INVOICES();
     this.checkScreen();
     window.addEventListener("resize", this.checkScreen);
   },
   computed: {
-    ...mapState(["invoiceModal"]),
+    ...mapState(["invoiceModal", "modalActive", "invoicesLoaded"]),
   },
   methods: {
+    ...mapActions(["GET_INVOICES"]),
     checkScreen() {
       const windowWidth = window.innerWidth;
 
