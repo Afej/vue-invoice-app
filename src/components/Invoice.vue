@@ -4,12 +4,14 @@
     :to="{ name: 'Invoice', params: { invoiceId: invoice.invoiceId } }"
   >
     <div class="left flex">
-      <span class="tracking-number">#{{ invoice.invoiceId }}</span>
-      <span class="due-date">#{{ invoice.paymentDueDate }}</span>
-      <span class="person">#{{ invoice.clientName }}</span>
+      <span class="tracking-number"><span>#</span>{{ invoice.invoiceId }}</span>
+      <span class="due-date">Due {{ invoice.paymentDueDate }}</span>
+      <span class="person">{{ invoice.clientName }}</span>
+      <span class="mobile-only price">${{ invoice.invoiceTotal }}</span>
     </div>
     <div class="right flex">
       <span class="price">${{ invoice.invoiceTotal }}</span>
+      <span class="mobile-only person">{{ invoice.clientName }}</span>
       <div
         class="status-button flex"
         :class="{
@@ -50,8 +52,12 @@ export default {
   background-color: #1e2139;
   align-items: center;
 
-  span{
-      font-size: 13px;
+  span {
+    font-size: 13px;
+  }
+
+  .mobile-only {
+    display: none;
   }
 
   .left {
@@ -65,6 +71,31 @@ export default {
 
     .tracking-number {
       text-transform: uppercase;
+
+      span {
+        color: #888eb0;
+      }
+    }
+
+    @media (max-width: 500px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+
+      span:first-child {
+        margin-bottom: 16px;
+        font-weight: 600;
+      }
+
+      .mobile-only.price {
+        display: inline-block;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .person {
+        display: none;
+      }
     }
   }
 
@@ -77,6 +108,28 @@ export default {
       flex: 1;
       font-size: 16px;
       font-weight: 600;
+    }
+
+    @media (max-width: 500px) {
+      flex-direction: column;
+      align-items: flex-end;
+
+      .mobile-only.person {
+        display: inline-block;
+      }
+
+      .price {
+        display: none;
+      }
+
+      .status-button {
+        margin-right: 0;
+        padding: 10px 16px;
+      }
+
+      .icon {
+        display: none;
+      }
     }
   }
 }

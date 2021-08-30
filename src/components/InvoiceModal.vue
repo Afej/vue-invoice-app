@@ -405,7 +405,12 @@ export default {
         }
 
         @media (max-width: 500px) {
-          flex-direction: column;
+          // flex-direction: column;
+          flex-wrap: wrap;
+
+          div:not(:last-child){
+            flex-basis: 40%;
+          }
         }
       }
     }
