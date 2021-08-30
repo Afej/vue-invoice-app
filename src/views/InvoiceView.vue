@@ -107,11 +107,61 @@
           </div>
         </div>
 
+        <!-- mobile layout -->
+        <div class="mobile-only billing-items">
+          <div
+            v-for="(item, index) in currentInvoice.invoiceItemList"
+            :key="index"
+            class="item flex"
+          >
+            <div class="left">
+              <p>{{ item.itemName }}</p>
+              <p>{{ item.qty }} x {{ item.price }}</p>
+            </div>
+            <div class="right">
+              <p>{{ item.total }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mobile-only total flex">
+          <p>Grand Total</p>
+          <p>{{ currentInvoice.invoiceTotal }}</p>
+        </div>
+        <!-- end of mobile layout -->
+
         <div class="total flex">
           <p>Amount Due</p>
           <p>{{ currentInvoice.invoiceTotal }}</p>
         </div>
       </div>
+    </div>
+
+    <!-- mobile buttons -->
+    <div class="mobile-only buttons">
+      <button
+        class="dark-purple"
+        @click="toggleEditInvoice(currentInvoice.docId)"
+      >
+        Edit
+      </button>
+      <button class="red" @click="deleteInvoice(currentInvoice.docId)">
+        Delete
+      </button>
+      <button
+        v-show="currentInvoice.invoicePending"
+        class="green"
+        @click="updateStatusToPaid(currentInvoice.docId)"
+      >
+        Mark as Paid
+      </button>
+      <button
+        v-if="currentInvoice.invoiceDraft || currentInvoice.invoicePaid"
+        class="orange"
+        @click="updateStatusToPending(currentInvoice.docId)"
+      >
+        Mark as Pending
+      </button>
     </div>
   </div>
 </template>
@@ -185,6 +235,21 @@ export default {
         color: white;
       }
     }
+
+    @media (max-width: 500px) {
+      .left {
+        justify-content: space-between;
+        flex: 1;
+
+        div {
+          margin-right: 0;
+        }
+      }
+
+      .right {
+        display: none;
+      }
+    }
   }
 
   .invoice-details {
@@ -220,12 +285,29 @@ export default {
         font-size: 12px;
         align-items: flex-end;
       }
+
+      @media (max-width: 500px) {
+        flex-direction: column;
+
+        .left > p:first-child {
+          margin-bottom: 0px;
+        }
+
+        .right {
+          align-items: flex-start;
+          margin-top: 24px;
+        }
+      }
     }
 
     .middle {
       margin-top: 50px;
       color: #dfe3fa;
       gap: 16px;
+
+      @media (max-width: 500px) {
+        flex-wrap: wrap;
+      }
 
       h4 {
         font-size: 12px;
@@ -240,6 +322,12 @@ export default {
       .bill,
       .payment {
         flex: 1;
+
+        @media (max-width: 500px) {
+          h4 {
+            margin-bottom: 0;
+          }
+        }
       }
 
       .payment {
@@ -262,16 +350,31 @@ export default {
 
         p {
           font-size: 12px;
+
+          @media (max-width: 500px) {
+            font-size: 10px;
+          }
         }
       }
 
       .send-to {
         flex: 2;
+
+        @media (max-width: 500px) {
+          margin-top: 12px;
+          h4 {
+            margin-bottom: 0;
+          }
+        }
       }
     }
 
     .bottom {
       margin-top: 50px;
+
+      .mobile-only {
+        display: none;
+      }
 
       .billing-items {
         padding: 32px;
@@ -318,7 +421,7 @@ export default {
       .total {
         color: #fff;
         padding: 32px;
-        background-color: #0B0E15;
+        background-color: #0b0e15;
         align-items: center;
         border-radius: 0 0 20px 20px;
 
@@ -331,6 +434,57 @@ export default {
           font-size: 28px;
           text-align: right;
         }
+      }
+
+      @media (max-width: 500px) {
+        .billing-items,
+        .total {
+          display: none;
+        }
+
+        .mobile-only.total {
+          display: flex;
+        }
+
+        .mobile-only.billing-items {
+          display: block;
+
+          .item {
+            justify-content: space-between;
+            align-items: center;
+
+            .left{
+              p:first-child{
+                font-weight: 600;
+                font-size: 16px;
+                text-transform: capitalize;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width: 500px) {
+      padding: 24px;
+    }
+  }
+
+  .mobile-only.buttons {
+    display: none;
+
+    @media (max-width: 500px) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #1e2139;
+      border-radius: 20px;
+      padding: 24px;
+
+      margin-top: 24px;
+
+      button {
+        padding: 10px 15px;
       }
     }
   }
