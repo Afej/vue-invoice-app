@@ -4,19 +4,35 @@
     <div class="header flex">
       <div class="left flex flex-column">
         <h1>Invoices</h1>
-        <span>There are 4 total invoices</span>
-        <span class="mobile-only">4 invoices</span>
+        <span v-if="invoiceData.length > 1"
+          >There are {{ invoiceData.length }} total invoices
+        </span>
+        <span v-else-if="invoiceData.length == 1"
+          >There is just {{ invoiceData.length }} invoice</span
+        >
+        <!-- mobile spans -->
+        <span class="mobile-only" v-if="invoiceData.length > 1"
+          >{{ invoiceData.length }} invoices</span
+        >
+        <span class="mobile-only" v-else-if="invoiceData.length == 1"
+          >{{ invoiceData.length }} invoices</span
+        >
       </div>
       <div class="right flex">
         <div class="filter flex" @click="toggleFilterMenu">
-          <span>Filter by status</span>
-          <span class="mobile-only">Filter </span>
+          <span
+            >Filter by status
+            <span v-if="filteredInvoice">: {{ filteredInvoice }}</span>
+          </span>
+          <span class="mobile-only"
+            >Filter <span v-if="filteredInvoice"> {{ filteredInvoice }}</span>
+          </span>
           <img src="@/assets/icon-arrow-down.svg" alt="" />
           <ul v-show="filterMenu" class="filter-menu">
-            <li>Draft</li>
-            <li>Paid</li>
-            <li>Pending</li>
-            <li>Clear filter</li>
+            <li @click="filteredInvoices">Draft</li>
+            <li @click="filteredInvoices">Paid</li>
+            <li @click="filteredInvoices">Pending</li>
+            <li @click="filteredInvoices">Clear Filter</li>
           </ul>
         </div>
         <div @click="newInvoice" class="button flex">
@@ -32,7 +48,7 @@
     <!-- invoicees -->
     <div v-if="invoiceData.length > 0">
       <Invoice
-        v-for="(invoice, index) in invoiceData"
+        v-for="(invoice, index) in filteredData"
         :key="index"
         :invoice="invoice"
       />
@@ -57,6 +73,7 @@ export default {
   data() {
     return {
       filterMenu: null,
+      filteredInvoice: null,
     };
   },
   methods: {
@@ -67,9 +84,31 @@ export default {
     toggleFilterMenu() {
       this.filterMenu = !this.filterMenu;
     },
+    filteredInvoices(e) {
+      if (e.target.innerText === "Clear Filter") {
+        this.filteredInvoice = null;
+        return;
+      }
+      this.filteredInvoice = e.target.innerText;
+    },
   },
   computed: {
     ...mapState(["invoiceData"]),
+    filteredData() {
+      return this.invoiceData.filter((invoice) => {
+        if (this.filteredInvoice === "Draft") {
+          return invoice.invoiceDraft === true;
+        }
+        if (this.filteredInvoice === "Pending") {
+          return invoice.invoicePending === true;
+        }
+        if (this.filteredInvoice === "Paid") {
+          return invoice.invoicePaid === true;
+        }
+
+        return invoice;
+      });
+    },
   },
 };
 </script>
@@ -92,6 +131,11 @@ export default {
       @media (max-width: 500px) {
         span.mobile-only {
           display: flex;
+          flex-direction: column;
+
+          span {
+            display: block;
+          }
         }
 
         span {
