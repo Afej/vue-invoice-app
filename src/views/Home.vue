@@ -15,7 +15,7 @@
           >{{ invoiceData.length }} invoices</span
         >
         <span class="mobile-only" v-else-if="invoiceData.length == 1"
-          >{{ invoiceData.length }} invoices</span
+          >{{ invoiceData.length }} invoice</span
         >
       </div>
       <div class="right flex">
@@ -47,12 +47,20 @@
 
     <!-- invoicees -->
     <div v-if="invoiceData.length > 0">
-      <Invoice
-        v-for="(invoice, index) in filteredData"
-        :key="index"
-        :invoice="invoice"
-      />
+      <div v-if="filteredData.length > 0">
+        <Invoice
+          v-for="(invoice, index) in filteredData"
+          :key="index"
+          :invoice="invoice"
+        />
+      </div>
+      <!-- if no fiter status match -->
+      <div v-else class="flex flex-column empty">
+        <img src="@/assets/illustration-empty.svg" alt="empty invoice data" />
+        <h3>There is nothing here</h3>
+      </div>
     </div>
+    <!-- if no invoices -->
     <div v-else class="empty flex flex-column">
       <img src="@/assets/illustration-empty.svg" alt="empty invoice data" />
       <h3>There is nothing here</h3>

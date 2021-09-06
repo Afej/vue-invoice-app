@@ -23,8 +23,8 @@
         </div>
       </div>
       <div class="right flex">
-        <button class="dark-purple" @click="toggleEditInvoice()">Edit</button>
-        <button class="red" @click="deleteInvoice(currentInvoice.docId)">
+        <button class="dark-purple" @click="toggleEditInvoice">Edit</button>
+        <button class="red" @click="toggleDeleteModal(currentInvoice.docId)">
           Delete
         </button>
         <button
@@ -42,6 +42,10 @@
           Mark as Pending
         </button>
       </div>
+    </div>
+
+    <div v-if="loading">
+      <Loading />
     </div>
 
     <!-- invoice details -->
@@ -163,9 +167,13 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
+import Loading from "@/components/Loading";
 
 export default {
   name: "invoiceView",
+  components: {
+    Loading,
+  },
   data() {
     return {
       currentInvoice: null,
@@ -179,6 +187,7 @@ export default {
       "SET_CURRENT_INVOICE",
       "TOGGLE_EDIT_INVOICE",
       "TOGGLE_INVOICE",
+      "TOGGLE_DELETE_MODAL",
     ]),
 
     ...mapActions([
@@ -195,10 +204,13 @@ export default {
       this.TOGGLE_EDIT_INVOICE();
       this.TOGGLE_INVOICE();
     },
-    async deleteInvoice(docId) {
-      await this.DELETE_INVOICE(docId);
-      this.$router.push({ name: "Home" });
+    toggleDeleteModal(docId) {
+      this.TOGGLE_DELETE_MODAL(docId);
     },
+    // async deleteInvoice(docId) {
+    //   await this.DELETE_INVOICE(docId);
+    //   this.$router.push({ name: "Home" });
+    // },
     updateStatusToPaid(docId) {
       this.UPDATE_STATUS_TO_PAID(docId);
     },
@@ -207,7 +219,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["currentInvoiceArray", "editInvoice"]),
+    ...mapState(["currentInvoiceArray", "editInvoice", "loading"]),
   },
   watch: {
     editInvoice() {

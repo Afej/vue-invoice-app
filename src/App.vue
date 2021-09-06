@@ -4,6 +4,7 @@
       <Navigation />
       <div class="app-content flex flex-column" v-if="invoicesLoaded">
         <Modal v-if="modalActive" />
+        <DeleteModal v-if="deleteModal" />
         <transition name="invoice">
           <InvoiceModal v-if="invoiceModal" />
         </transition>
@@ -25,6 +26,7 @@ import Navigation from "@/components/Navigation";
 import InvoiceModal from "@/components/InvoiceModal";
 import Loading from "@/components/Loading";
 import Modal from "@/components/Modal";
+import DeleteModal from "@/components/DeleteModal";
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -32,6 +34,7 @@ export default {
     Navigation,
     InvoiceModal,
     Modal,
+    DeleteModal,
     Loading,
   },
   data() {
@@ -45,7 +48,7 @@ export default {
     window.addEventListener("resize", this.checkScreen);
   },
   computed: {
-    ...mapState(["invoiceModal", "modalActive", "invoicesLoaded"]),
+    ...mapState(["invoiceModal", "modalActive","deleteModal", "invoicesLoaded"]),
   },
   methods: {
     ...mapActions(["GET_INVOICES"]),

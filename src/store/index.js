@@ -3,23 +3,32 @@ import db from "@/firebase/firebaseInit";
 
 export default createStore({
   state: {
+    loading: null,
     invoiceData: [],
     invoiceModal: null,
     modalActive: null,
+    deleteModal: null,
     invoicesLoaded: null,
     currentInvoiceArray: null,
+    currentInvoiceDocId: null,
     editInvoice: null,
   },
   mutations: {
+    TOGGLE_LOADING(state) {
+      state.loading = !state.loading;
+    },
     TOGGLE_INVOICE(state) {
       state.invoiceModal = !state.invoiceModal;
     },
     TOGGLE_MODAL(state) {
       state.modalActive = !state.modalActive;
     },
+    TOGGLE_DELETE_MODAL(state, payload) {
+      state.deleteModal = !state.deleteModal;
+      state.currentInvoiceDocId = payload;
+    },
     SET_INVOICE_DATA(state, payload) {
       state.invoiceData.push(payload);
-      // console.log(state.invoiceData)
     },
     INVOICES_LOADED(state) {
       state.invoicesLoaded = true;
@@ -99,19 +108,24 @@ export default createStore({
       commit("SET_CURRENT_INVOICE", routeId);
     },
     async DELETE_INVOICE({ commit }, docId) {
+      commit("TOGGLE_LOADING");
       const getInvoice = db.collection("invoices").doc(docId);
       await getInvoice.delete();
       commit("DELETE_INVOICE", docId);
+      commit("TOGGLE_LOADING");
     },
     async UPDATE_STATUS_TO_PAID({ commit }, docId) {
+      commit("TOGGLE_LOADING");
       const getInvoice = db.collection("invoices").doc(docId);
       await getInvoice.update({
         invoicePaid: true,
         invoicePending: false,
       });
       commit("UPDATE_STATUS_TO_PAID", docId);
+      commit("TOGGLE_LOADING");
     },
     async UPDATE_STATUS_TO_PENDING({ commit }, docId) {
+      commit("TOGGLE_LOADING");
       const getInvoice = db.collection("invoices").doc(docId);
       await getInvoice.update({
         invoicePaid: false,
@@ -119,6 +133,7 @@ export default createStore({
         invoiceDraft: false,
       });
       commit("UPDATE_STATUS_TO_PENDING", docId);
+      commit("TOGGLE_LOADING");
     },
   },
 });

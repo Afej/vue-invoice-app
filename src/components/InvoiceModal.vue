@@ -219,7 +219,6 @@ export default {
     return {
       dateOptions: { year: "numeric", month: "short", day: "numeric" },
       docId: null,
-      loading: null,
       billerStreetAddress: null,
       billerCity: null,
       billerZipCode: null,
@@ -280,7 +279,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["TOGGLE_INVOICE", "TOGGLE_MODAL", "TOGGLE_EDIT_INVOICE"]),
+    ...mapMutations([
+      "TOGGLE_INVOICE",
+      "TOGGLE_MODAL",
+      "TOGGLE_EDIT_INVOICE",
+      "TOGGLE_LOADING",
+    ]),
 
     ...mapActions(["UPDATE_INVOICE", "GET_INVOICES"]),
 
@@ -327,7 +331,8 @@ export default {
         return;
       }
 
-      this.loading = true;
+      this.TOGGLE_LOADING();
+      // this.loading = true;
 
       this.calcInvoiceTotal();
 
@@ -358,7 +363,8 @@ export default {
         invoicePaid: null,
       });
 
-      this.loading = false;
+      // this.loading = false;
+      this.TOGGLE_LOADING();
       this.TOGGLE_INVOICE();
       this.GET_INVOICES();
     },
@@ -411,7 +417,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["editInvoice", "currentInvoiceArray"]),
+    ...mapState(["editInvoice", "currentInvoiceArray", "loading"]),
   },
   watch: {
     paymentTerms() {
