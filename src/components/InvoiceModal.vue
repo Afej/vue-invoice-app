@@ -7,7 +7,9 @@
     <form @submit.prevent="submitForm" class="invoice-content">
       <Loading v-show="loading" />
       <h1 v-if="!editInvoice">New Invoice</h1>
-      <h1 v-else>Edit Invoice</h1>
+      <h1 v-else>
+        Edit <span style="color: #888eb0">#</span>{{ this.invoiceId }}
+      </h1>
 
       <!-- Bill from -->
       <div class="bill-from flex flex-column">
@@ -57,7 +59,7 @@
         </div>
         <div class="input flex flex-column">
           <label for="clientEmail">Client's Email</label>
-          <input required type="text" id="clientEmail" v-model="clientEmail" />
+          <input required type="email" id="clientEmail" v-model="clientEmail" />
         </div>
         <div class="input flex flex-column">
           <label for="clientStreetAddress">Street Address</label>
@@ -147,14 +149,16 @@
               :key="index"
             >
               <td class="item-name">
-                <input type="text" v-model="item.itemName" />
+                <input type="text" v-model="item.itemName" required />
               </td>
-              <td class="qty"><input type="text" v-model="item.qty" /></td>
+              <td class="qty">
+                <input type="number" v-model="item.qty" required />
+              </td>
               <td class="price">
-                <input type="text" v-model="item.price" />
+                <input type="number" v-model="item.price" />
               </td>
               <td class="total flex">
-                ${{ (item.total = item.qty * item.price) }}
+                {{ (item.total = item.qty * item.price) }}
               </td>
               <img
                 @click="deleteInvoiceItem(item.id)"
@@ -171,7 +175,7 @@
         </div>
       </div>
 
-      <!-- Save/Exit -->
+      <!-- Save/Exit buttons -->
       <div class="save flex">
         <div class="left">
           <button type="button" @click="closeInvoice" class="red">
@@ -230,6 +234,7 @@ export default {
       clientZipCode: null,
       clientCountry: null,
       invoiceDateUnix: null,
+      invoiceId: null,
       invoiceDate: null,
       paymentTerms: null,
       paymentDueDateUnix: null,
@@ -267,6 +272,7 @@ export default {
       this.clientZipCode = currentInvoice.clientZipCode;
       this.clientCountry = currentInvoice.clientCountry;
       this.invoiceDateUnix = currentInvoice.invoiceDateUnix;
+      this.invoiceId = currentInvoice.invoiceId;
       this.invoiceDate = currentInvoice.invoiceDate;
       this.paymentTerms = currentInvoice.paymentTerms;
       this.paymentDueDateUnix = currentInvoice.paymentDueDateUnix;
@@ -303,7 +309,7 @@ export default {
       this.invoiceItemList.push({
         id: uid(),
         itemName: "",
-        qty: "",
+        qty: 0,
         price: 0,
         total: 0,
       });
@@ -374,7 +380,7 @@ export default {
         return;
       }
 
-      this.loading = true;
+      this.TOGGLE_LOADING();
 
       this.calcInvoiceTotal();
 
@@ -399,7 +405,7 @@ export default {
         invoiceTotal: this.invoiceTotal,
       });
 
-      this.loading = false;
+      this.TOGGLE_LOADING();
 
       const data = {
         docId: this.docId,
@@ -462,6 +468,11 @@ export default {
     color: #fff;
     box-shadow: 10px 4px 6px -1px rgba(0, 0, 0, 0.2),
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+    @media (max-width: 500px) {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
 
     h1 {
       margin-bottom: 48px;
@@ -572,11 +583,11 @@ export default {
 
     .save {
       margin-top: 60px;
-      //   align-items: center;
 
       div {
         flex: 1;
       }
+
       .right {
         justify-content: flex-end;
       }
@@ -584,7 +595,13 @@ export default {
       @media (max-width: 500px) {
         flex-direction: column;
         margin-top: 45px;
-        // align-items: flex-start;
+
+        .right,
+        .left {
+          button {
+            width: 100%;
+          }
+        }
 
         div {
           margin-bottom: 20px;

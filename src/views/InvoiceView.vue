@@ -101,8 +101,8 @@
           >
             <p>{{ item.itemName }}</p>
             <p>{{ item.qty }}</p>
-            <p>{{ item.price }}</p>
-            <p>{{ item.total }}</p>
+            <p>${{ item.price }}</p>
+            <p>${{ item.total }}</p>
           </div>
         </div>
 
@@ -115,23 +115,23 @@
           >
             <div class="left">
               <p>{{ item.itemName }}</p>
-              <p>{{ item.qty }} x {{ item.price }}</p>
+              <p>$ {{ item.qty }} x {{ item.price }}</p>
             </div>
             <div class="right">
-              <p>{{ item.total }}</p>
+              <p>$ {{ item.total }}</p>
             </div>
           </div>
         </div>
 
         <div class="mobile-only total flex">
           <p>Grand Total</p>
-          <p>{{ currentInvoice.invoiceTotal }}</p>
+          <p>$ {{ currentInvoice.invoiceTotal }}</p>
         </div>
         <!-- end of mobile layout -->
 
         <div class="total flex">
           <p>Amount Due</p>
-          <p>{{ currentInvoice.invoiceTotal }}</p>
+          <p>$ {{ currentInvoice.invoiceTotal }}</p>
         </div>
       </div>
     </div>
@@ -144,7 +144,7 @@
       >
         Edit
       </button>
-      <button class="red" @click="deleteInvoice(currentInvoice.docId)">
+      <button class="red" @click="toggleDeleteModal(currentInvoice.docId)">
         Delete
       </button>
       <button
@@ -207,10 +207,6 @@ export default {
     toggleDeleteModal(docId) {
       this.TOGGLE_DELETE_MODAL(docId);
     },
-    // async deleteInvoice(docId) {
-    //   await this.DELETE_INVOICE(docId);
-    //   this.$router.push({ name: "Home" });
-    // },
     updateStatusToPaid(docId) {
       this.UPDATE_STATUS_TO_PAID(docId);
     },

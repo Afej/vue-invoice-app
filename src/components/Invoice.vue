@@ -7,10 +7,10 @@
       <span class="tracking-number"><span>#</span>{{ invoice.invoiceId }}</span>
       <span class="due-date">Due {{ invoice.paymentDueDate }}</span>
       <span class="person">{{ invoice.clientName }}</span>
-      <span class="mobile-only price">${{ invoice.invoiceTotal }}</span>
+      <span class="mobile-only price">$ {{ invoice.invoiceTotal }}</span>
     </div>
     <div class="right flex">
-      <span class="price">${{ invoice.invoiceTotal }}</span>
+      <span class="price">$ {{ invoice.invoiceTotal }}</span>
       <span class="mobile-only person">{{ invoice.clientName }}</span>
       <div
         class="status-button flex"
