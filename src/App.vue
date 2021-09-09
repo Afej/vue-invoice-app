@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div class="app flex flex-column" v-if="!smallMobile">
+    <div
+      class="app flex flex-column"
+      v-if="!smallMobile"
+      :class="{ light: !darkMode }"
+    >
       <Navigation />
       <div class="app-content flex flex-column" v-if="invoicesLoaded">
         <Modal v-if="modalActive" />
@@ -14,7 +18,11 @@
         <Loading />
       </div>
     </div>
-    <div v-else class="mobile-message flex flex-column">
+    <div
+      v-else
+      class="mobile-message flex flex-column"
+      :class="{ light: !darkMode }"
+    >
       <h2>Sorry, this app is not supported on this device</h2>
       <p>To use this app, please use a supported device.</p>
     </div>
@@ -48,7 +56,13 @@ export default {
     window.addEventListener("resize", this.checkScreen);
   },
   computed: {
-    ...mapState(["invoiceModal", "modalActive","deleteModal", "invoicesLoaded"]),
+    ...mapState([
+      "invoiceModal",
+      "modalActive",
+      "deleteModal",
+      "invoicesLoaded",
+      "darkMode",
+    ]),
   },
   methods: {
     ...mapActions(["GET_INVOICES"]),
@@ -79,6 +93,10 @@ export default {
   background-color: #141625;
   min-height: 100vh;
 
+  &.light {
+    background-color: #f8f7fc;
+  }
+
   @media (min-width: 900px) {
     flex-direction: row !important;
   }
@@ -98,6 +116,10 @@ export default {
   background-color: #141625;
   color: #fff;
   padding: 0 20px;
+
+  &.light {
+    color: #141625;
+  }
 
   p {
     margin-top: 16px;

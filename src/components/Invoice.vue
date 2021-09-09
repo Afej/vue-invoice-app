@@ -2,6 +2,7 @@
   <router-link
     class="invoice flex"
     :to="{ name: 'Invoice', params: { invoiceId: invoice.invoiceId } }"
+    :class="{ light: !darkMode }"
   >
     <div class="left flex">
       <span class="tracking-number"><span>#</span>{{ invoice.invoiceId }}</span>
@@ -32,10 +33,14 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "invoice",
   props: {
     invoice: Object,
+  },
+  computed: {
+    ...mapState(["darkMode"]),
   },
 };
 </script>
@@ -51,6 +56,20 @@ export default {
   padding: 28px 32px;
   background-color: #1e2139;
   align-items: center;
+
+  &.light {
+    color: #141625;
+    background-color: #fff;
+    font-weight: 600;
+
+    .status-button.draft {
+      &::before {
+        background-color: #141625;
+      }
+      color: #141625;
+      background-color: rgba(223, 227, 250, 1);
+    }
+  }
 
   span {
     font-size: 13px;

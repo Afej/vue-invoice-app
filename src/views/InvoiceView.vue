@@ -1,5 +1,9 @@
 <template>
-  <div class="container invoice-view" v-if="currentInvoice">
+  <div
+    class="container invoice-view"
+    v-if="currentInvoice"
+    :class="{ light: !darkMode }"
+  >
     <router-link class="nav-link flex" :to="{ name: 'Home' }">
       <img src="@/assets/icon-arrow-left.svg" alt="back icon" />
       Go Back
@@ -215,7 +219,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["currentInvoiceArray", "editInvoice", "loading"]),
+    ...mapState(["currentInvoiceArray", "editInvoice", "loading", "darkMode"]),
   },
   watch: {
     editInvoice() {
@@ -229,6 +233,57 @@ export default {
 
 <style lang="scss" scoped>
 .invoice-view {
+  // light mode styling
+  &.light {
+    font-weight: 600;
+
+    .nav-link {
+      color: #141625;
+    }
+
+    .header,
+    .invoice-details {
+      background-color: #fff;
+    }
+
+    .header {
+      .left span {
+        color: #141625;
+      }
+    }
+
+    .invoice-details {
+      div {
+        color: #141625;
+      }
+
+      .top {
+        div {
+          color: #141625;
+        }
+
+        .left {
+          p:first-child {
+            color: #141625;
+          }
+        }
+      }
+
+      .middle h4 {
+        font-weight: 600;
+      }
+
+      .bottom .billing-items {
+        background-color: #f8f7fc;
+
+        .heading,
+        .item {
+          color: #141625;
+        }
+      }
+    }
+  }
+
   .nav-link {
     margin-bottom: 32px;
     align-items: center;

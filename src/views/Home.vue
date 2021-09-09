@@ -1,5 +1,5 @@
 <template>
-  <div class="home container">
+  <div class="home container" :class="{ light: !darkMode }">
     <!-- header -->
     <div class="header flex">
       <div class="left flex flex-column">
@@ -101,7 +101,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["invoiceData"]),
+    ...mapState(["invoiceData", "darkMode"]),
     filteredData() {
       return this.invoiceData.filter((invoice) => {
         if (this.filteredInvoice === "Draft") {
@@ -124,6 +124,14 @@ export default {
 <style lang="scss" scoped>
 .home {
   color: #fff;
+
+  &.light {
+    color: #141625;
+
+    .header .right .filter ul {
+      color: #fff;
+    }
+  }
 
   .header {
     margin-bottom: 65px;
@@ -162,6 +170,7 @@ export default {
 
         span {
           font-size: 12px;
+          font-weight: 600;
         }
       }
 

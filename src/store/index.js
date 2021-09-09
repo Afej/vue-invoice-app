@@ -4,6 +4,7 @@ import db from "@/firebase/firebaseInit";
 export default createStore({
   state: {
     loading: null,
+    darkMode: true,
     invoiceData: [],
     invoiceModal: null,
     modalActive: null,
@@ -16,6 +17,9 @@ export default createStore({
   mutations: {
     TOGGLE_LOADING(state) {
       state.loading = !state.loading;
+    },
+    TOGGLE_DARKMODE(state) {
+      state.darkMode = !state.darkMode;
     },
     TOGGLE_INVOICE(state) {
       state.invoiceModal = !state.invoiceModal;
@@ -65,6 +69,9 @@ export default createStore({
     },
   },
   actions: {
+    TOGGLE_DARKMODE({commit}) {
+      commit("TOGGLE_DARKMODE");
+    },
     async GET_INVOICES({ commit, state }) {
       const getData = db.collection("invoices");
       const results = await getData.get();

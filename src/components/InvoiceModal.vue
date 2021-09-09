@@ -3,6 +3,7 @@
     @click="checkClick"
     ref="invoiceWrap"
     class="invoice-wrap flex flex-column"
+    :class="{ light: !darkMode }"
   >
     <form @submit.prevent="submitForm" class="invoice-content">
       <Loading v-show="loading" />
@@ -423,7 +424,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["editInvoice", "currentInvoiceArray", "loading"]),
+    ...mapState(["editInvoice", "currentInvoiceArray", "loading", "darkMode"]),
   },
   watch: {
     paymentTerms() {
@@ -452,6 +453,29 @@ export default {
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  &.light {
+    // background-color: #f8f7fc;
+
+    .invoice-content {
+      background-color: #f8f7fc;
+      color: #141625;
+
+      h1 {
+        color: #141625;
+      }
+
+      input,
+      select {
+        background-color: #f8f7fc;
+        // background-color: #1e2139;
+        color: #141625;
+        border: 1px solid #141625;
+      }
+
+    
+    }
   }
 
   @media (min-width: 900px) {
