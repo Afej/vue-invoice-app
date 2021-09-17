@@ -214,6 +214,7 @@ import db from "@/firebase/firebaseInit";
 import Loading from "@/components/Loading";
 import { uid } from "uid";
 import { mapActions, mapMutations, mapState } from "vuex";
+import { useToast } from "vue-toastification";
 
 export default {
   name: "invoiceModal",
@@ -246,6 +247,13 @@ export default {
       invoiceItemList: [],
       invoiceTotal: 0,
     };
+  },
+  setup() {
+    // Get toast interface
+    const toast = useToast();
+
+    // Make it available inside methods
+    return { toast };
   },
   created() {
     //   get current date for invoice date field
@@ -334,7 +342,8 @@ export default {
     },
     async uploadInvoice() {
       if (this.invoiceItemList.length <= 0) {
-        alert("Please fill all work items");
+        // alert("Please fill all work items");
+        this.toast.info("Please fill all work items!");
         return;
       }
 
@@ -377,7 +386,8 @@ export default {
     },
     async updateInvoice() {
       if (this.invoiceItemList.length <= 0) {
-        alert("Please fill all work items");
+        // alert("Please fill all work items");
+        this.toast.info("Please fill all work items!");
         return;
       }
 
@@ -456,10 +466,8 @@ export default {
   }
 
   &.light {
-    // background-color: #f8f7fc;
-
     .invoice-content {
-      background-color: #f8f7fc;
+      background-color: #f0f1f2;
       color: #141625;
 
       h1 {
@@ -468,13 +476,11 @@ export default {
 
       input,
       select {
-        background-color: #f8f7fc;
+        background-color: #f0f1f2;
         // background-color: #1e2139;
         color: #141625;
         border: 1px solid #141625;
       }
-
-    
     }
   }
 

@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div
-      class="app flex flex-column"
-      v-if="!smallMobile"
-      :class="{ light: !darkMode }"
-    >
+    <div v-if="!smallMobile" class="app flex flex-column" :class="{ light: !darkMode }">
       <Navigation />
       <div class="app-content flex flex-column" v-if="invoicesLoaded">
         <Modal v-if="modalActive" />
@@ -52,6 +48,7 @@ export default {
   },
   created() {
     this.GET_INVOICES();
+
     this.checkScreen();
     window.addEventListener("resize", this.checkScreen);
   },
@@ -62,6 +59,7 @@ export default {
       "deleteModal",
       "invoicesLoaded",
       "darkMode",
+      // "toastMessage",
     ]),
   },
   methods: {
@@ -94,7 +92,7 @@ export default {
   min-height: 100vh;
 
   &.light {
-    background-color: #f8f7fc;
+    background-color: #f0f1f2;
   }
 
   @media (min-width: 900px) {

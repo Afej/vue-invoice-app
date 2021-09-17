@@ -1,5 +1,8 @@
 import { createStore } from "vuex";
 import db from "@/firebase/firebaseInit";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 export default createStore({
   state: {
@@ -13,6 +16,7 @@ export default createStore({
     currentInvoiceArray: null,
     currentInvoiceDocId: null,
     editInvoice: null,
+    // toastMessage: "",
   },
   mutations: {
     TOGGLE_LOADING(state) {
@@ -67,9 +71,12 @@ export default createStore({
         }
       });
     },
+    // SET_TOAST_MESSAGE(state, payload) {
+    //   state.toastMessage = payload;
+    // },
   },
   actions: {
-    TOGGLE_DARKMODE({commit}) {
+    TOGGLE_DARKMODE({ commit }) {
       commit("TOGGLE_DARKMODE");
     },
     async GET_INVOICES({ commit, state }) {
@@ -110,6 +117,9 @@ export default createStore({
     async UPDATE_INVOICE({ commit, dispatch }, { docId, routeId }) {
       commit("DELETE_INVOICE", docId);
       await dispatch("GET_INVOICES");
+
+      toast.success("Invoice updated!");
+
       commit("TOGGLE_INVOICE");
       commit("TOGGLE_EDIT_INVOICE");
       commit("SET_CURRENT_INVOICE", routeId);
@@ -119,6 +129,9 @@ export default createStore({
       const getInvoice = db.collection("invoices").doc(docId);
       await getInvoice.delete();
       commit("DELETE_INVOICE", docId);
+
+      toast.success("Invoice deleted!");
+
       commit("TOGGLE_LOADING");
     },
     async UPDATE_STATUS_TO_PAID({ commit }, docId) {
@@ -129,6 +142,7 @@ export default createStore({
         invoicePending: false,
       });
       commit("UPDATE_STATUS_TO_PAID", docId);
+      toast.success("Invoice status updated!");
       commit("TOGGLE_LOADING");
     },
     async UPDATE_STATUS_TO_PENDING({ commit }, docId) {
@@ -140,6 +154,7 @@ export default createStore({
         invoiceDraft: false,
       });
       commit("UPDATE_STATUS_TO_PENDING", docId);
+      toast.success("Invoice status updated!");
       commit("TOGGLE_LOADING");
     },
   },

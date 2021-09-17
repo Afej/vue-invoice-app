@@ -1,8 +1,8 @@
 <template>
   <header class="flex">
-    <div class="branding flex">
+    <router-link to="/" class="branding flex">
       <img src="@/assets/file-invoice-dollar-solid.png" alt="" />
-    </div>
+    </router-link>
     <div class="end flex">
       <div class="toggle flex flex-column">
         <!-- <img src="@/assets/night.svg" alt="moon" class="moon" /> -->

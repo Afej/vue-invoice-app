@@ -274,7 +274,7 @@ export default {
       }
 
       .bottom .billing-items {
-        background-color: #f8f7fc;
+        background-color: #F0F1F2;
 
         .heading,
         .item {
